@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hamster-paas/pkg/application"
 	"hamster-paas/pkg/service"
+	"hamster-paas/pkg/service/icp"
 	service2 "hamster-paas/pkg/service/node"
 	"hamster-paas/pkg/utils/logger"
 )
@@ -21,6 +22,7 @@ type HandlerServer struct {
 	orderService                 service2.OrderService
 	resourceStandardService      service2.ResourceStandardService
 	zanService                   service.ZanService
+	icpService                   icp.IcpService
 }
 
 func NewHandlerServer() *HandlerServer {
@@ -101,6 +103,13 @@ func NewHandlerServer() *HandlerServer {
 		logger.Error(fmt.Sprintf("application get zan service failed: %s", err.Error()))
 		panic(fmt.Sprintf("application get zan service failed: %s", err.Error()))
 	}
+
+	icpService, err := application.GetBean[*icp.IcpService]("icpService")
+	if err != nil {
+		logger.Error(fmt.Sprintf("application get icp service failed: %s", err.Error()))
+		panic(fmt.Sprintf("application get icp service failed: %s", err.Error()))
+	}
+	handlerServer.icpService = *icpService
 
 	handlerServer.zanService = *zanService
 

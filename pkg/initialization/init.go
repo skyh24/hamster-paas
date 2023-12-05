@@ -6,6 +6,7 @@ import (
 	"hamster-paas/pkg/handler"
 	"hamster-paas/pkg/rpc/aline"
 	"hamster-paas/pkg/service"
+	"hamster-paas/pkg/service/icp"
 	"hamster-paas/pkg/service/nginx_log_parse"
 	service2 "hamster-paas/pkg/service/node"
 	"hamster-paas/pkg/service/zan"
@@ -86,6 +87,8 @@ func Init() {
 	listeningService := service2.NewOrderListeningService(os.Getenv("TOKEN_ADDRESS"), db)
 	listeningService.StartOrderListening()
 	listeningService.StartScanBlockInformation()
+	// icp service
+	application.SetBean("icpService", icp.NewIcpService(db))
 
 	zanService := service.NewZanService(zanClient, db)
 	application.SetBean("zanService", zanService)
